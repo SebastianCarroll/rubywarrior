@@ -5,9 +5,44 @@ class Player
   def initialize
     @directions = [:forward, :backward, :left, :right]
     @healing = false
+    # States:
+    #   normal: Walk towards the stairs
+    #   fight: Attack slimes/bound slimes
+    #   free: Release captives
+    #   heal: Move to safe place and rest till full health
+    @state = :normal
   end
   def play_turn(warrior)
+    @warrior = warrior
+    transition_state
+    act
+  end
+
+  def transition_state
+    
+  end
+
+  def act
+    case @state
+    when :normal
+      # do normal stuff
+      puts @state
+      move_to_exit
+    when :fight
+      # Attack things
+      puts @state
+    when :free
+      # Help those bros
+      puts @state
+    when :heal
+      # Better check yo self
+      puts @state
+    else
+      puts @state
+    end
+
     @friendly_captives ||= @directions.select{|d| warrior.feel(d).captive?}
+
     enemies = @directions.select do |d| 
       (warrior.feel(d).enemy?)
     end
@@ -18,13 +53,17 @@ class Player
         # Kill other captives
         captives = @directions.select{|d| warrior.feel(d).captive?}
         if captives.empty?
+          puts @state
+
+
           # Normal state
         else
+          puts @state
           # kill captives state
         end
       else
         # Free actual captives
-        warrior.free! @friendly_captives.pop unless 
+        puts @state
       end
 
       if @healing
@@ -57,5 +96,9 @@ class Player
     else
       warrior.walk! safety.pop
     end
+  end
+
+  def move_to_exit
+    @warrior.walk! @warrior.direction_of_stairs
   end
 end
