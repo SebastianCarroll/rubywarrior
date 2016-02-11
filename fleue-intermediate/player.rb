@@ -7,16 +7,36 @@ class Player
     @healing = false
   end
   def play_turn(warrior)
-    enemies = @directions.select{|d| warrior.feel(d).enemy?}
+    @friendly_captives ||= @directions.select{|d| warrior.feel(d).captive?}
+    enemies = @directions.select do |d| 
+      (warrior.feel(d).enemy?)
+    end
 
-    if enemies.empty? 
+    # TODO: This decision tree is getting complex. How to break it down into more simple objects? Could use a state machine but not sure exactly how that would work or if it would even give me what i want.
+    if enemies.empty?
+      if @friendly_captives.empty?
+        # Kill other captives
+        captives = @directions.select{|d| warrior.feel(d).captive?}
+        if captives.empty?
+          # Normal state
+        else
+          # kill captives state
+        end
+      else
+        # Free actual captives
+        warrior.free! @friendly_captives.pop unless 
+      end
+
       if @healing
         if warrior.health == 20
+          # Fully healed
           @healing = false
         else
+          # Still healing and safe to do so
           warrior.rest!
         end
       else
+        # Fully healed and no monstors so look for exit
         warrior.walk! warrior.direction_of_stairs
       end
     else
@@ -24,7 +44,7 @@ class Player
         @healing = true
         retreat(warrior, enemies)
       else
-        warrior.attack! enemies.pop
+        warrior.bind! enemies.pop
       end
     end
   end
