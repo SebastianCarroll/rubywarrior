@@ -12,14 +12,20 @@ class Player
     #   heal: Move to safe place and rest till full health
     @state = :normal
   end
+
   def play_turn(warrior)
     @warrior = warrior
-    @friendly_captives ||= @directions.select{|d| @warrior.feel(d).captive?}
+    gather_information
     act
   end
 
+  def gather_information
+    @friendly_captives ||= @directions.select{|d| @warrior.feel(d).captive?}
+    @enemies = @directions.select{|d| @warrior.feel(d).enemy?}
+    @captives = @directions.select{|d| @warrior.feel(d).captive?}
+  end
+
   def act
-    p "In state: #{@state}"
     case @state
     when :normal
       # do normal stuff
