@@ -23,9 +23,11 @@ class Player
     @friendly_captives ||= @directions.select{|d| @warrior.feel(d).captive?}
     @enemies = @directions.select{|d| @warrior.feel(d).enemy?}
     @captives = @directions.select{|d| @warrior.feel(d).captive?}
+    @d_enemies, @d_captives = @warrior.listen.partition{|s| s.enemy?}
   end
 
   def act
+    puts @state
     case @state
     when :normal
       act_normal
@@ -34,7 +36,7 @@ class Player
     when :bind
       bind_slimes
     when :free
-      # Help those bros
+      free_captives
     when :heal
       rest_till_healed
     else
@@ -46,7 +48,13 @@ class Player
     if @enemies.empty?
       if @friendly_captives.empty?
         if @captives.empty?
-          move_to_exit
+          if !@d_captives.empty?
+            free_captives
+          elsif !@d_enemies.empty?
+            puts 'attack'
+          else
+            move_to_exit
+          end
         else
           attack_slime
         end
@@ -58,18 +66,42 @@ class Player
     end
   end
 
+  def free_captives
+    transition(:free)
+    if !@enemies.empty?
+      attack_slime
+    elsif !@captives.empty?
+      free_captive
+    elsif !@d_captives.empty?
+      dir = @warrior.direction_of(@d_captives.pop)
+      @warrior.walk! dir
+    end
+  end
+
   def free_captive
     @warrior.rescue! @friendly_captives.pop
   end
 
   def attack_slime
     transition(:fight)
-    if @enemies.empty? && @warrior.health < 7
-      rest
+    if @warrior.health < 7
+      if @enemies.empty?
+        rest
+      else
+        retreat
+      end
     elsif !@enemies.empty?
       @warrior.attack! @enemies.pop
     elsif ! @captives.empty?
-      @warrior.attack! @captives.pop
+      dir = @captives.pop
+      if @friendly_captives.include? dir
+        @warrior.rescue! dir
+      else
+        @warrior.attack! dir
+      end
+    elsif !@d_enemies.empty?
+      dir = @warrior.direction_of(@d_enemies.first)
+      @warrior.walk! dir
     else
       move_to_exit
     end
@@ -89,7 +121,8 @@ class Player
   end
 
   # Moves warrior away from enemies
-  def retreat(enemies)
+  def retreat
+    transition(:heal)
     safety = @directions.select{|d| @warrior.feel(d).empty? }
     if safety.empty?
       @warrior.rest!
