@@ -21,6 +21,7 @@ class Player
 
   def gather_information
     @friendly_captives ||= @directions.select{|d| @warrior.feel(d).captive?}
+    @initial_captives ||= @warrior.listen.select{|d| d.captive?}
     @enemies = @directions.select{|d| @warrior.feel(d).enemy?}
     @captives = @directions.select{|d| @warrior.feel(d).captive?}
     @d_enemies, @d_captives = @warrior.listen.partition{|s| s.enemy?}
@@ -94,7 +95,7 @@ class Player
       @warrior.attack! @enemies.pop
     elsif ! @captives.empty?
       dir = @captives.pop
-      if @friendly_captives.include? dir
+      if @initial_captives.map{|s| @warrior.direction_of(s)}.include? dir
         @warrior.rescue! dir
       else
         @warrior.attack! dir
