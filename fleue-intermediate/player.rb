@@ -36,12 +36,7 @@ class Player
     when :free
       # Help those bros
     when :heal
-      if @warrior.health <= 18
-        rest
-      else
-        move_to_exit
-        transition(:normal)
-      end
+      rest_till_healed
     else
       puts @state
     end
@@ -54,7 +49,6 @@ class Player
           move_to_exit
         else
           attack_slime
-          transition(:fight)
         end
       else
         free_captive
@@ -69,6 +63,7 @@ class Player
   end
 
   def attack_slime
+    transition(:fight)
     if @enemies.empty? && @warrior.health < 7
       rest
     elsif !@enemies.empty?
@@ -77,7 +72,14 @@ class Player
       @warrior.attack! @captives.pop
     else
       move_to_exit
-      transition(:normal)
+    end
+  end
+
+  def rest_till_healed
+    if @warrior.health <= 18
+      rest
+    else
+      attack_slime
     end
   end
 
@@ -98,6 +100,7 @@ class Player
 
   def move_to_exit
     @warrior.walk! @warrior.direction_of_stairs
+    transition(:normal)
   end
 
   def bind_slimes
