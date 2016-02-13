@@ -45,6 +45,8 @@ class Player
     end
   end
 
+  # TODO: This decision tree is getting pretty complex again
+  # Not sure how to simplify it though.
   def act_normal
     if @enemies.empty?
       if @friendly_captives.empty?
@@ -52,7 +54,7 @@ class Player
           if !@d_captives.empty?
             free_captives
           elsif !@d_enemies.empty?
-            puts 'attack'
+            attack_slime
           else
             move_to_exit
           end
@@ -60,7 +62,7 @@ class Player
           attack_slime
         end
       else
-        free_captive
+        free_captives
       end
     else
       @warrior.bind! @enemies.pop
@@ -83,6 +85,7 @@ class Player
     @warrior.rescue! @friendly_captives.pop
   end
 
+  # TODO: Again so many if/else statements
   def attack_slime
     transition(:fight)
     if @warrior.health < 7
@@ -124,12 +127,7 @@ class Player
   # Moves warrior away from enemies
   def retreat
     transition(:heal)
-    safety = @directions.select{|d| @warrior.feel(d).empty? }
-    if safety.empty?
-      @warrior.rest!
-    else
-      @warrior.walk! safety.pop
-    end
+    @warrior.walk! @directions.detect{|d| @warrior.feel(d).empty? }
   end
 
   def move_to_exit
