@@ -48,9 +48,15 @@ class Player
   # TODO: This decision tree is getting pretty complex again
   # Not sure how to simplify it though.
   def act_normal
-    if @enemies.empty?
-      if @friendly_captives.empty?
-        if @captives.empty?
+    if !@enemies.empty?
+      @warrior.bind! @enemies.pop
+    else
+      if !@friendly_captives.empty?
+        free_captives
+      else
+        if !@captives.empty?
+          attack_slime
+        else
           if !@d_captives.empty?
             free_captives
           elsif !@d_enemies.empty?
@@ -58,14 +64,8 @@ class Player
           else
             move_to_exit
           end
-        else
-          attack_slime
         end
-      else
-        free_captives
       end
-    else
-      @warrior.bind! @enemies.pop
     end
   end
 
