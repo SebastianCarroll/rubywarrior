@@ -77,12 +77,19 @@ class Player
       free_captive
     elsif !@d_captives.empty?
       dir = @warrior.direction_of(@d_captives.pop)
-      @warrior.walk! dir
+      stairs = @warrior.direction_of_stairs
+      to_walk = if dir == stairs
+                  @directions.shuffle.detect{|s| s != dir && @warrior.feel(s).empty?}
+                else
+                  dir
+                end
+
+      @warrior.walk! to_walk
     end
   end
 
   def free_captive
-    @warrior.rescue! @friendly_captives.pop
+    @warrior.rescue! (@friendly_captives + @captives).first
   end
 
   # TODO: Again so many if/else statements
@@ -95,7 +102,11 @@ class Player
         retreat
       end
     elsif !@enemies.empty?
-      @warrior.attack! @enemies.pop
+      if @enemies.length > 1
+        @warrior.bind! @enemies.pop
+      else
+        @warrior.attack! @enemies.pop
+      end
     elsif ! @captives.empty?
       dir = @captives.pop
       if @initial_captives.map{|s| @warrior.direction_of(s)}.include? dir
