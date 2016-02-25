@@ -1,0 +1,6 @@
+This god object is getting tedious. The state machine is getting complex but for the life of me I can't figure out a better way  to do it. Each individual level, sure, there are easy ways to manage that. But I'm aiming for the end goal where the warrior can do all levels. So it needs to be able to deal with:
+- differing apis - no listen, etc for earlier levels
+- differing enemies - ticking captives in later levels
+- Differing goals - not efficient to just walk right to the stairs in level 4?
+
+For level 6 for example, we start off with a captive ticking so we need to get to them as fast as possible. THere is only one path to the ticking captive so we could just move into the clear (not where we have just come from) until we reach the ticking captive. That would work but is another state on the warrior. It's also not general. If there is any deviation in the later levels we would need to make it more general. YANGI I guess.
