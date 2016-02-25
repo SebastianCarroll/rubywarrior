@@ -1,13 +1,13 @@
 module Rescuer
   def free_captives
     transition(:free)
-    if adjacent?(:enemy?)
+    if adjacent_to?(:enemy?)
       if @d_captives.any?{|d| d.ticking?}
         bind_slimes
       else
         attack_slime
       end
-    elsif !@captives.empty?
+    elsif adjacent_to?(:captive?)
       free_captive
     elsif !@d_captives.empty?
       dir = @warrior.direction_of(@d_captives.pop)

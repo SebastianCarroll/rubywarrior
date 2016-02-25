@@ -53,7 +53,7 @@ class Player
   # TODO: This decision tree is getting pretty complex again
   # Not sure how to simplify it though.
   def act_normal
-    if !@enemies.empty?
+    if adjacent_to?(:enemy?)
       @warrior.bind! @enemies.pop
     elsif @d_captives.any?{|d| d.ticking?}
       free_ticking_captives
@@ -61,7 +61,7 @@ class Player
       if !@friendly_captives.empty?
         free_captives
       else
-        if !@captives.empty?
+        if adjacent_to?(:captive?)
           attack_slime
         else
           if !@d_captives.empty?

@@ -3,18 +3,18 @@ module Attacker
   def attack_slime
     transition(:fight)
     if @warrior.health < 7
-      if @enemies.empty?
-        rest
-      else
+      if adjacent_to?(:enemy?)
         retreat
+      else
+        rest
       end
-    elsif !@enemies.empty?
+    elsif adjacent_to?(:enemy?)
       if @enemies.length > 1
         @warrior.bind! @enemies.pop
       else
         @warrior.attack! @enemies.pop
       end
-    elsif ! @captives.empty?
+    elsif adjacent_to?(:captive?)
       dir = @captives.pop
       if @initial_captives.map{|s| @warrior.direction_of(s)}.include? dir
         @warrior.rescue! dir

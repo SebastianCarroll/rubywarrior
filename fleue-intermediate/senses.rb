@@ -7,7 +7,7 @@ module Senses
     @d_enemies, @d_captives = @warrior.listen.partition{|s| s.enemy?}
   end
 
-  def adjacent?(method)
+  def adjacent_to?(method)
     @directions.any?{|d| @warrior.feel(d).send(method)}
   end
 end
