@@ -3,7 +3,7 @@ module Rescuer
     transition(:free)
     if adjacent_to?(:enemy?)
       if can_hear?(:ticking?)
-        bind_slimes
+        move_to_bomber
       else
         attack_slime
       end

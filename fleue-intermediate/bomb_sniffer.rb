@@ -4,6 +4,8 @@ module BombSniffer
     transition(:ticking)
     if adjacent_to?(:ticking?)
       free_bomber
+    elsif adjacent_to?(:captive?)
+      free_captive
     elsif can_hear?(:ticking?)
       move_to_bomber
     else
@@ -16,7 +18,14 @@ module BombSniffer
   end
 
   def move_to_bomber
-    to_dir = @directions.shuffle.detect{|s| s != opposite(@last_dir) && @warrior.feel(s).empty?}
+    bomb_dir = @warrior.direction_of(@warrior.listen.detect{|s| s.ticking?})
+
+    to_dir =
+      if @warrior.feel(bomb_dir).empty?
+        bomb_dir
+      else
+        @directions.shuffle.detect{|s| s != opposite(@last_dir) && @warrior.feel(s).empty?}
+      end
     @warrior.walk! to_dir
     @last_dir = to_dir
   end
