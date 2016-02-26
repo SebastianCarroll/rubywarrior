@@ -13,6 +13,9 @@ module Senses
 
   def can_hear?(method)
     @warrior.listen.any?{|square| square.send(method)}
-    binding.pry
+  end
+
+  def outnumbered?
+    @directions.count{|d| @warrior.feel(d).enemy?} > 1
   end
 end

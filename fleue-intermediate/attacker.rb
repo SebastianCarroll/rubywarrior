@@ -1,31 +1,43 @@
 module Attacker
-  # TODO: Again so many if/else statements
   def attack_slime
     transition(:fight)
     if @warrior.health < 7
-      if adjacent_to?(:enemy?)
-        retreat
-      else
-        rest
-      end
+      reconsider
     elsif adjacent_to?(:enemy?)
-      if @enemies.length > 1
-        @warrior.bind! @enemies.pop
-      else
-        @warrior.attack! @enemies.pop
-      end
+      attack
     elsif adjacent_to?(:captive?)
-      dir = @captives.pop
-      if @initial_captives.map{|s| @warrior.direction_of(s)}.include? dir
-        @warrior.rescue! dir
-      else
-        @warrior.attack! dir
-      end
+      deal_with_captive
     elsif can_hear?(:captive?)
-      dir = @warrior.direction_of(@d_enemies.first)
-      @warrior.walk! dir
+      @warrior.walk! @warrior.direction_of(@d_captives.first)
+    elsif can_hear?(:enemy?)
+      @warrior.walk! @warrior.direction_of(@d_enemies.first)
     else
       move_to_exit
+    end
+  end
+
+  def reconsider
+    if adjacent_to?(:enemy?)
+      retreat
+    else
+      rest
+    end
+  end
+
+  def attack
+    if outnumbered? 
+      @warrior.bind! @enemies.pop
+    else
+      @warrior.attack! @enemies.pop
+    end
+  end
+
+  def deal_with_captive
+    dir = @captives.pop
+    if @initial_captives.map{|s| @warrior.direction_of(s)}.include? dir
+      @warrior.rescue! dir
+    else
+      @warrior.attack! dir
     end
   end
 end
