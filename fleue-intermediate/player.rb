@@ -64,9 +64,9 @@ class Player
         if adjacent_to?(:captive?)
           attack_slime
         else
-          if !@d_captives.empty?
+          if can_hear?(:captive?)
             free_captives
-          elsif !@d_enemies.empty?
+          elsif can_hear?(:enemy?)
             attack_slime
           else
             move_to_exit

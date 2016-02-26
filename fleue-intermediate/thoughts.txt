@@ -4,3 +4,5 @@ This god object is getting tedious. The state machine is getting complex but for
 - Differing goals - not efficient to just walk right to the stairs in level 4?
 
 For level 6 for example, we start off with a captive ticking so we need to get to them as fast as possible. THere is only one path to the ticking captive so we could just move into the clear (not where we have just come from) until we reach the ticking captive. That would work but is another state on the warrior. It's also not general. If there is any deviation in the later levels we would need to make it more general. YANGI I guess.
+
+Looking for a method name that means the opposite of adjacent too, so it should sense far away monstors and stuff that arent close. Although I guess the 'isnt' close is actually another concer. I could certainly make a simple 'can_hear' which wraps the listen method? Then it would be up to the caller if they want to check that it isn't adjacent.

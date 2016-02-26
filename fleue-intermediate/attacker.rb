@@ -21,7 +21,7 @@ module Attacker
       else
         @warrior.attack! dir
       end
-    elsif !@d_enemies.empty?
+    elsif can_hear?(:captive?)
       dir = @warrior.direction_of(@d_enemies.first)
       @warrior.walk! dir
     else

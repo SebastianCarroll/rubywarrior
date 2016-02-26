@@ -10,4 +10,9 @@ module Senses
   def adjacent_to?(method)
     @directions.any?{|d| @warrior.feel(d).send(method)}
   end
+
+  def can_hear?(method)
+    @warrior.listen.any?{|square| square.send(method)}
+    binding.pry
+  end
 end
