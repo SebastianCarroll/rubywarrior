@@ -7,8 +7,7 @@ module BombSniffer
     elsif can_hear?(:ticking?)
       move_to_bomber
     else
-      #TODO: Potentially wasted turn here. Can't just walk to exit though. That could waste more turns.
-      transition(:normal)
+      act_normal
     end
   end
 
