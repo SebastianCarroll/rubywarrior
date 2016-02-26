@@ -34,6 +34,7 @@ module Attacker
 
   def deal_with_captive
     dir = @captives.pop
+    # TODO: initial_captives is void as soon as warrior moves.
     if @initial_captives.map{|s| @warrior.direction_of(s)}.include? dir
       @warrior.rescue! dir
     else
