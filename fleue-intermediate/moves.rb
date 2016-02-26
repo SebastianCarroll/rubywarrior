@@ -9,5 +9,4 @@ module Moves
     @warrior.walk! @warrior.direction_of_stairs
     transition(:normal)
   end
-
 end

@@ -11,6 +11,8 @@ module Rescuer
       free_captive
     elsif can_hear?(:captive?)
       move_to_captive
+    elsif can_hear?(:enemy?)
+      attack_slime
     else
       move_to_exit
     end
