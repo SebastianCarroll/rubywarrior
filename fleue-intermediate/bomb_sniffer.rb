@@ -20,32 +20,4 @@ module BombSniffer
     @warrior.walk! to_dir
     @last_dir = to_dir
   end
-
-  def free_and_closest_to(method)
-    bomber = @warrior.listen.detect{|square| square.send(method)}
-    closest_to(@warrior.direction_of(bomber))
-  end
-
-  def closest_to(dir)
-    if free(dir)
-      dir
-    else
-      sideways = orthogonal(dir).select{|d| free(d)}
-      if sideways.length > 1
-        sideways.first
-      else
-        opposite(dir)
-      end
-    end
-  end
-
-  def free(dir)
-    @warrior.feel(dir).empty?
-  end
-
-  def orthogonal(dir)
-    rl = [:right,:left]
-    fb = [:forwards, :backwards]
-    rl.include?(dir) ? fb : rl
-  end
 end
