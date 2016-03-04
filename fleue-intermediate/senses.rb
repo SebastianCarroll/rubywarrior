@@ -18,4 +18,8 @@ module Senses
   def outnumbered?
     @directions.count{|d| @warrior.feel(d).enemy?} > 1
   end
+
+  def direction_of_all(method)
+    @warrior.listen.select{|d| d.send(method)}.map{|d| @warrior.direction_of(d)}
+  end
 end
