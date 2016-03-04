@@ -4,10 +4,10 @@ module BombSniffer
     transition(:ticking)
     if adjacent_to?(:ticking?)
       free_bomber
-    elsif adjacent_to?(:captive?)
-      free_captive
     elsif can_hear?(:ticking?)
       move_to_bomber
+    elsif adjacent_to?(:captive?)
+      free_captive
     else
       act_normal
     end
@@ -26,7 +26,12 @@ module BombSniffer
       else
         @directions.shuffle.detect{|s| s != opposite(@last_dir) && @warrior.feel(s).empty?}
       end
-    @warrior.walk! to_dir
-    @last_dir = to_dir
+
+    if to_dir.nil?
+      attack_slime
+    else
+      @warrior.walk! to_dir
+      @last_dir = to_dir
+    end
   end
 end

@@ -1,8 +1,10 @@
 module Attacker
   def attack_slime
     transition(:fight)
-    if @warrior.health < 7
+    if @warrior.health <  3
       reconsider
+    elsif can_hear?(:ticking?)
+      plough_to_bomb
     elsif adjacent_to?(:enemy?)
       attack
     elsif adjacent_to?(:captive?)
@@ -39,6 +41,18 @@ module Attacker
       @warrior.rescue! dir
     else
       @warrior.attack! dir
+    end
+  end
+
+  def plough_to_bomb
+    to_bomb = direction_of_all(:ticking?).first
+    wingmen= @directions.select{|d| @warrior.feel(d).enemy?}.reject{|d| d == to_bomb}
+    if not wingmen.empty?
+      @warrior.bind! wingmen.first
+    elsif @warrior.feel(to_bomb).empty?
+      free_ticking_captives
+    else
+      @warrior.attack! to_bomb
     end
   end
 end
