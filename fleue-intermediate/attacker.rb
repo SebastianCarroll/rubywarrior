@@ -51,6 +51,8 @@ module Attacker
       @warrior.bind! wingmen.first
     elsif @warrior.feel(to_bomb).empty?
       free_ticking_captives
+    elsif look(to_bomb).take(2).all?{|s| s.enemy?}
+      @warrior.detonate! to_bomb
     else
       @warrior.attack! to_bomb
     end
