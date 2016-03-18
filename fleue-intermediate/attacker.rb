@@ -46,9 +46,9 @@ module Attacker
 
   def plough_to_bomb
     to_bomb = direction_of_all(:ticking?).first
-    wingmen= @directions.select{|d| @warrior.feel(d).enemy?}.reject{|d| d == to_bomb}
-    if not wingmen.empty?
-      @warrior.bind! wingmen.first
+    flankers= @directions.select{|d| @warrior.feel(d).enemy?}.reject{|d| d == to_bomb}
+    if not flankers.empty?
+      @warrior.bind! flankers.first
     elsif @warrior.feel(to_bomb).empty?
       free_ticking_captives
     elsif look(to_bomb).take(2).all?{|s| s.enemy?}
