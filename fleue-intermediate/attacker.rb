@@ -50,7 +50,17 @@ module Attacker
     if not flankers.empty?
       @warrior.bind! flankers.first
     elsif @warrior.feel(to_bomb).empty?
-      free_ticking_captives
+      if distance_of_all(:captive?).sort.reverse.take(2).all?{|s| s == 3}
+        if @warrior.health < 5
+          @warrior.rest!
+        elsif distance_of_all(:enemy?).all?{|d| d >= 3}
+          free_ticking_captives
+        else
+          @warrior.detonate! to_bomb
+        end
+      else
+        free_ticking_captives
+      end
     elsif look(to_bomb).take(2).all?{|s| s.enemy?}
       @warrior.detonate! to_bomb
     else

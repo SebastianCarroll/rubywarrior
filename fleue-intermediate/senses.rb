@@ -23,6 +23,10 @@ module Senses
     @warrior.listen.select{|d| d.send(method)}.map{|d| @warrior.direction_of(d)}
   end
 
+  def distance_of_all(method)
+    @warrior.listen.select{|d| d.send(method)}.map{|d| @warrior.distance_of(d)}
+  end
+
   def look(direction)
     @warrior.look(direction)
   end
