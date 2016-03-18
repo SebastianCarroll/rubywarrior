@@ -7,7 +7,7 @@ module BombSniffer
     elsif can_hear?(:ticking?)
       move_to_bomber
     elsif adjacent_to?(:captive?)
-      free_captive
+      free_captives
     else
       act_normal
     end
